@@ -77,7 +77,7 @@ struct gatedesc {
 
 - [x]  
 
-> * 冒号后表示位域，即该变量存储时占用的位数
+> * 冒号后表示位域，即该变量存储时占用的位数,指定了一个struct中每个成员所占的位数
 
 对于如下的代码段，
 ```
@@ -104,13 +104,36 @@ SETGATE(intr, 0,1,2,3);
 
 - [x]  
 
->  4231168
+>  * windows上：60930
+>  * ios上：65538
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x]  
 
 > 
-
+```
+#include "list.h"
+#include <cstdio>
+int main() {
+	list_entry *a = new list_entry();
+	list_entry *b = new list_entry();
+	list_entry *c = new list_entry();
+	list_entry *d = new list_entry();
+	list_entry *e = new list_entry();
+	list_entry *f = new list_entry();
+	list_init(a);
+	list_init(e);
+	list_add(a, b);
+	list_add_before(a, c);
+	list_add_after(a, d);
+	list_del(c);
+	list_del_init(b);
+	printf("%d\n", list_empty(e));
+	printf("%d\n", list_next(a));
+	printf("%d\n", list_prev(e));
+	return 0;
+}
+```
 ---
 
 ## 开放思考题
