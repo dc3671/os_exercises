@@ -8,7 +8,7 @@
 - [x]  
 
 >  http://www.imada.sdu.dk/Courses/DM18/Litteratur/IntelnATT.htm
->  已读懂
+>  * 已读懂
 
 虽然学过计算机原理和x86汇编（根据THU-CS的课程设置），但对ucore中涉及的哪些硬件设计或功能细节不够了解？
 - [x]  
@@ -45,7 +45,7 @@
 搭建好实验环境，请描述碰到的困难和解决的过程。
 - [x]  
 
->  使用virtualbox安装已配置环境的Linux 没有遇到困难
+>  * 使用virtualbox安装已配置环境的Linux 没有遇到困难
 
 熟悉基本的git命令行操作命令，从github上
 的 http://www.github.com/chyyuu/ucore_lab 下载
@@ -77,7 +77,7 @@ struct gatedesc {
 
 - [x]  
 
-> 
+> * 冒号后表示位域，即该变量存储时占用的位数
 
 对于如下的代码段，
 ```
@@ -104,7 +104,7 @@ SETGATE(intr, 0,1,2,3);
 
 - [x]  
 
-> 
+>  4231168
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x]  
