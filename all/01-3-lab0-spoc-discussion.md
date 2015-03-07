@@ -55,17 +55,18 @@
 ---
 
 搭建好实验环境，请描述碰到的困难和解决的过程。
-- [x]  
+- 由于课程之前就在使用Fedora Linux，所以对于实验需要的工具基本上都安装完毕并且熟悉使用了
+- 除了QEMU这个专门用于硬件模拟的软件，但是在安装上也没有太大问题，直接用yum install qemu即可。
 
 > 
 
 熟悉基本的git命令，从github上（http://www.github.com/chyyuu/ucore_lab）下载ucore lab实验
-- [x]  
+- 已完成。
 
 > 
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
-- [x]  
+-   
 
 > 
 
