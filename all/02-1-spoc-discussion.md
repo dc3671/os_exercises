@@ -39,7 +39,7 @@
 - 异常比如说除零操作，段错误等。
 
 
-1. Linux的系统调用有哪些？大致的功能分类有哪些？  (w2l1)
+ 1. Linux的系统调用有哪些？大致的功能分类有哪些？  (w2l1)
 - 总共有上百个，分为进程控制，文件操作，系统管理，内存管理，网络管理，socket控制，用户管理等
  
 
@@ -47,50 +47,50 @@
 - sys_exit、sys_fork、sys_wait、sys_exec等等40多个。
 - 与Linux类似，文件操作、进程管理、内存管理等。
  
- ## 3.4 linux系统调用分析
+## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
- - 在汇编代码里，通过对eax\ebx\ecx\edx四个寄存器分别赋系统调用所需参数，再由int进行系统调用，从而由内核态进行操作。
- - objdump用于查看可执行文件的信息，可用于反汇编文件
- - nm可用于查看可执行文件中涉及的符号，可以看出该文件使用了哪些系统调用，这里有：
-0000000000000006 a SYS_close
-000000000000003f a SYS_dup2
-000000000000000b a SYS_execve
-0000000000000001 a SYS_exit
-0000000000000002 a SYS_fork
-0000000000000013 a SYS_lseek
-000000000000005a a SYS_mmap
-000000000000005b a SYS_munmap
-0000000000000005 a SYS_open
-0000000000000066 a SYS_socketcall
-0000000000000005 a SYS_socketcall_accept
-0000000000000002 a SYS_socketcall_bind
-0000000000000004 a SYS_socketcall_listen
-0000000000000001 a SYS_socketcall_socket
-0000000000000004 a SYS_write
+- 在汇编代码里，通过对eax\ebx\ecx\edx四个寄存器分别赋系统调用所需参数，再由int进行系统调用，从而由内核态进行操作。
+- objdump用于查看可执行文件的信息，可用于反汇编文件
+- nm可用于查看可执行文件中涉及的符号，可以看出该文件使用了哪些系统调用，这里有：
+0000000000000006 a SYS_close<br>
+000000000000003f a SYS_dup2<br>
+000000000000000b a SYS_execve<br>
+0000000000000001 a SYS_exit<br>
+0000000000000002 a SYS_fork<br>
+0000000000000013 a SYS_lseek<br>
+000000000000005a a SYS_mmap<br>
+000000000000005b a SYS_munmap<br>
+0000000000000005 a SYS_open<br>
+0000000000000066 a SYS_socketcall<br>
+0000000000000005 a SYS_socketcall_accept<br>
+0000000000000002 a SYS_socketcall_bind<br>
+0000000000000004 a SYS_socketcall_listen<br>
+0000000000000001 a SYS_socketcall_socket<br>
+0000000000000004 a SYS_write<br>
 - file用于查看文件类型，如下：
-lab1-ex0.o: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=cbcf22c8d4172a9bf6b10ffee7c5a378e90fc81e, not stripped
+lab1-ex0.o: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=cbcf22c8d4172a9bf6b10ffee7c5a378e90fc81e, not stripped<br>
 
 
  1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
 - strace用于跟踪查看可执行文件的系统调用，输出如下
-hello world
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 26.15    0.000017          17         1           execve
- 21.54    0.000014           2         9           mmap
- 13.85    0.000009           2         4           mprotect
- 10.77    0.000007           7         1           munmap
-  7.69    0.000005           3         2           open
-  6.15    0.000004           1         3           fstat
-  4.62    0.000003           3         1           write
-  3.08    0.000002           2         1         1 access
-  1.54    0.000001           1         1           read
-  1.54    0.000001           1         2           close
-  1.54    0.000001           1         1           brk
-  1.54    0.000001           1         1           arch_prctl
------- ----------- ----------- --------- --------- ----------------
-100.00    0.000065                    27         1 total
- 出错是由于main函数里未return
+- hello world<br>
+% time     seconds  usecs/call     calls    errors syscall<br>
+ ----- ----------- ----------- --------- --------- ----------------<br>
+ 26.15    0.000017          17         1           execve<br>
+ 21.54    0.000014           2         9           mmap<br>
+ 13.85    0.000009           2         4           mprotect<br>
+ 10.77    0.000007           7         1           munmap<br>
+  7.69    0.000005           3         2           open<br>
+  6.15    0.000004           1         3           fstat<br>
+  4.62    0.000003           3         1           write<br>
+  3.08    0.000002           2         1         1 access<br>
+  1.54    0.000001           1         1           read<br>
+  1.54    0.000001           1         2           close<br>
+  1.54    0.000001           1         1           brk<br>
+  1.54    0.000001           1         1           arch_prctl<br>
+ ----- ----------- ----------- --------- --------- ----------------<br>
+100.00    0.000065                    27         1 total<br>
+ 出错是由于main函数里未return<br>
 
  
 ## 3.5 ucore系统调用分析
