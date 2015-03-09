@@ -71,6 +71,7 @@
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
  
+>  * 先将系统调用号SYS_write、标准输出STDOUT、字符串常量hello、字符串长度放入指定寄存器，然后使用"int 0x80"调用系统调用
 
  ```
   + 采分点：说明了objdump，nm，file的大致用途，说明了系统调用的具体含义
