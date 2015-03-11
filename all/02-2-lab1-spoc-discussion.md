@@ -64,7 +64,7 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 #include <stdio.h>
 #include <stdarg.h>
 
-void f(int num, ...) {
+void foo(int num, ...) {
 	va_list p;
 	va_start(p, num);
 	int i;
@@ -77,8 +77,8 @@ void f(int num, ...) {
 }
 
 int main() {
-	f(2, 3, 4);
-	f(3, 5, 6, 7);
+	foo(2, 3, 4);
+	foo(3, 5, 6, 7);
 	return 0;
 }
  ```
@@ -87,7 +87,7 @@ int main() {
 如果让你来一个阶段一个阶段地从零开始完整实现lab1（不是现在的填空考方式），你的实现步骤是什么？（比如先实现一个可显示字符串的bootloader（描述一下要实现的关键步骤和需要注意的事项），再实现一个可加载ELF格式文件的bootloader（再描述一下进一步要实现的关键步骤和需要注意的事项）...） (spoc)
 - [x]  
 
-> 
+>  
 
 
 如何能获取一个系统调用的调用次数信息？如何可以获取所有系统调用的调用次数信息？请简要说明可能的思路。(spoc)
