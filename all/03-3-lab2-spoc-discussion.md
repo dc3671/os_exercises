@@ -59,9 +59,6 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
 
 - [x]  
 
-<<<<<<< HEAD
-> 
-=======
 > 有差异
 >
 > 我的学号是2012011315，模37余数是7，对应的是打印机端口 LPT1
@@ -90,7 +87,7 @@ trapframe at 0x7b7c
 kernel panic at kern/trap/trap.c:210:
     unexpected trap in kernel.
 ```
->>>>>>> 587b69fb23cbc67ff76c357a1ac18768bf12ce4c
+
 
 （3）对于lab2的输出信息，请说明数字的含义
 ```
