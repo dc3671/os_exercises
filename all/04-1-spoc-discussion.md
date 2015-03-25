@@ -33,6 +33,38 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+>  * 运行以上程序后，可得执行时间如下。真实时间基本上等于用户态时间加上系统调用时间，但可能因为分时等原因，导致实际时间偏大
+
+```
+  real	0m0.032s
+  user	0m0.027s
+  sys	0m0.003s
+```
+
+>  * 对代码中对于A数组的赋值顺序进行调整(行列互换)，代码如下：
+
+```
+#include <stdio.h>
+#define NUM 1024
+#define COUNT 10
+int A[NUM][NUM];
+void main (void) {
+  int i,j,k;
+  for (k = 0; k<COUNT; k++)
+  for (i = 0; i < NUM; i++)
+  for (j = 0; j	 < NUM; j++)
+      A[j][i] = i+j;
+  printf("%d count computing over!\n",i*j*k);
+}
+```
+>  * 可以看到此时的执行时间明显变长（如下），分析原因可知：原来的先行后列的赋值形式变为先列后行形式导致了内存的访问局部性被破坏，所以程序的执行时间会比原来长
+
+```
+  real	0m0.172s
+  user	0m0.166s
+  sys	0m0.003s
+```
+
 ## 小组思考题目
 ----
 
@@ -63,35 +95,29 @@ PT6..0:页表的物理基址>>5
 在[物理内存模拟数据文件](./04-1-spoc-memdiskdata.md)中，给出了4KB物理内存空间和4KBdisk空间的值，PDBR的值。
 
 请回答下列虚地址是否有合法对应的物理内存，请给出对应的pde index, pde contents, pte index, pte contents，the value of addr in phy page OR disk sector。
+
+>  * 答案如下：
 ```
 Virtual Address 6653:
-Virtual Address 1c13:
-Virtual Address 6890:
-Virtual Address 0af6:
-Virtual Address 1e6f:
-```
-
-回答可参考以如下表示：
-```
-Virtual Address 7570:
-  --> pde index:0x1d  pde contents:(valid 1, pfn 0x33)
-    --> pte index:0xb  pte contents:(valid 0, pfn 0x7f)
-      --> Fault (page table entry not valid)
-      
-Virtual Address 21e1:
-  --> pde index:0x8  pde contents:(valid 0, pfn 0x7f)
+  --> pde index:19  pde contents:(valid 0, pfn 7f)
       --> Fault (page directory entry not valid)
-
-Virtual Address 7268:
-  --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
-    --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
-      --> Translates to Physical Address 0xca8 --> Value: 16
-
-Virtual Address 106f:
-  --> pde index:0x3  pde contents:(valid 1, pfn 0x2d)
-    --> pte index:0x14  pte contents:(valid 0, pfn 0x06)
-      --> To Disk Sector Address 0x167 --> Value: 2c
+Virtual Address 1c13:
+  --> pde index:7  pde contents:(valid 1, pfn 3d)
+    --> pte index:0  pte contents:(valid 1, pfn 76)
+      --> Translates to Physical Address ed3 --> Value: 12
+Virtual Address 6890:
+  --> pde index:1a  pde contents:(valid 0, pfn 7f)
+      --> Fault (page directory entry not valid)
+Virtual Address af6:
+  --> pde index:2  pde contents:(valid 1, pfn 21)
+    --> pte index:17	pte contents:(valid 0, pfn 7f)
+      --> Translates to Disk Address ff6 --> Value: 3
+Virtual Address 1e6f:
+  --> pde index:7  pde contents:(valid 1, pfn 3d)
+    --> pte index:13  pte contents:(valid 0, pfn 16)
+      --> Translates to Disk Address 2cf --> Value: 1c
 ```
+
 
 ## 扩展思考题
 ---
