@@ -35,6 +35,12 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+- 对于A[i][j]顺序： 
+- 0.03s user 0.00s system 99% cpu 0.029 total
+- 对于A[j][i]顺序：
+- 0.14s user 0.00s system 99% cpu 0.146 total
+
+
 ## 小组思考题目
 ----
 
@@ -42,9 +48,13 @@ time ./goodlocality
 
 （1）缺页异常可用于虚拟内存管理中。如果在中断服务例程中进行缺页异常的处理时，再次出现缺页异常，这时计算机系统（软件或硬件）会如何处理？请给出你的合理设计和解释。
 
+- 这时由于处理缺页的代码不在内存里，会导致系统阻塞无法继续执行，所以应该让处理缺页异常的代码常驻内存。
+
 ### 缺页中断次数计算
 （2）如果80386机器的一条机器指令(指字长4个字节)，其功能是把一个32位字的数据装入寄存器，指令本身包含了要装入的字所在的32位地址。这个过程最多会引起几次缺页中断？
 > 提示：内存中的指令和数据的地址需要考虑地址对齐和不对齐两种情况。需要考虑页目录表项invalid、页表项invalid、TLB缺失等是否会产生中断？
+
+- 指令、数据都可能处于两页之间，即不对齐，即4次，然后页目录表、页表项各一次，共6次。
 
 ### 虚拟页式存储的地址转换
 
@@ -115,6 +125,34 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
   disk 16: 00 0a 15 1a 03 00 09 13 1c 0a 18 03 13 07 17 1c 
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
+```
+
+-  0x6653 = 0110 0110 0101 0011 = 110_01 10_010 10011 = 0x19 0x12 0x13
+-  基址，0xd80 = 1101_100 0_0000, page 0x6c
+
+```
+Virtual Address 6653(0_11001_10010_10011):
+        --> pde index:0x19  pde contents:(valid 0, pfn 0x7f)
+            --> Fault (page directory entry not valid)
+
+Virtual Address 1c13(0_00111_00000_10011):
+    --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+        --> pte index:0x0  pte contents:(valid 1, pfn 0x76)
+            --> To Physical Address 0xed3(0111011010011) -->Value: 12
+
+Virtual Address 6890(0_11010_00100_10000):
+    --> pde index:0x1a pde contents:(valid 0, pfn 0x7f)
+        --> Fault (page directory entry not valid)
+
+Virtual Address 0af6(0_00010_10111_10110):
+    --> pde index:0x2  pde contents:(valid 1, pfn 0x21)
+        --> pte index:0x17 pte contents:(valid 0, pfn 0x7f)
+            --> To Disk Sector Address 0x7ef(0111111101111) --> Value: 04
+
+Virtual Address 1e6f(0_00111_10011_01111):
+    --> pde index:0x7  pde contents:(valid 1, pfn 0x3d)
+        --> pde index:0x13  pde contents:(valid 0, pfn 0x16)
+            --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
 
 ## 扩展思考题
