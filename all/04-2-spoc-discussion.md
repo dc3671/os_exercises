@@ -32,9 +32,83 @@
 ----
 (1)（spoc）请证明为何LRU算法不会出现belady现象
 
+- 访问页的序列为b(t)，物理页帧的集合为S(t)，更大的物理页帧的集合为S'(t)
+讨论以下四种情况：
+1. b(t)属于S(t)，b(t)属于S'(t)
+2. b(t)不属于S(t)，b(t)属于S'(t)
+3. b(t)不属于S(t)，b(t)不属于S'(t)
+4. b(t)属于S(t)，b(t)不属于S'(t)
+- 前三种情况下，在物理页帧为S'(t)时，缺页率不会高于S(t)
+- 若第四种情况发生，则：
+- b(t)在S(t)中，则知b(t)最近被使用过且在S(t)中并没有被换出，然而其在S'(t)中被换出，与LRU算法矛盾
 
 (2)（spoc）根据你的`学号 mod 4`的结果值，确定选择四种替换算法（0：LRU置换算法，1:改进的clock 页置换算法，2：工作集页置换算法，3：缺页率置换算法）中的一种来设计一个应用程序（可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考如python代码或独自实现。
  - [页置换算法实现的参考实例](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab3/page-replacement-policy.py)
+
+- 工作集算法，（2012012390 mod 4 = 2）
+
+```cc
+//Working_Set.cc
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+
+#define WINDOW_SIZE 4
+
+int tag[WINDOW_SIZE], cache[WINDOW_SIZE];
+int size = 0;
+
+void Working_set(int page)
+{
+    bool hit = false;
+    for (int i = 0; i < size; i++)
+    {
+        tag[i]++;
+        if (cache[i] == page)
+        {
+            printf("page hit\n");
+            tag[i] = 0;
+            hit = 1;
+        }
+        else if (tag[i] >= WINDOW_SIZE)
+        {
+            cache[i] = cache[size-1];
+            tag[i] = tag[size-1];
+            size--;
+            i--;
+        }
+    }
+    if (hit == 0)
+    {
+        printf("page miss\n");
+        cache[size] = page;
+        tag[size] = 0;
+        size++;
+    }
+}
+
+int main()
+{    
+    memset(tag, 0, sizeof(int) * WINDOW_SIZE);
+    memset(cache, 0, sizeof(int) * WINDOW_SIZE);
+    int page;
+    while (1)
+    {        
+        std::cin >> page;
+        if (page < 0)
+            break; 
+        Working_set(page);
+        for (int i = 0; i < size; i++)
+        {
+            printf("{%d, %d}, ", cache[i], tag[i]);
+        } 
+        printf("\n"); 
+    }
+     
+    return 0;
+}
+```
  
 ## 扩展思考题
 （1）了解LIRS页置换算法的设计思路，尝试用高级语言实现其基本思路。此算法是江松博士（导师：张晓东博士）设计完成的，非常不错！
