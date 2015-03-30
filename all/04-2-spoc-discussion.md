@@ -46,7 +46,53 @@
 
 (2)（spoc）根据你的`学号 mod 4`的结果值，确定选择四种替换算法（0：LRU置换算法，1:改进的clock 页置换算法，2：工作集页置换算法，3：缺页率置换算法）中的一种来设计一个应用程序（可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试。请参考如python代码或独自实现。
  - [页置换算法实现的参考实例](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab3/page-replacement-policy.py)
+```
+# MRA: Missing Replacement Algorithm
+import random
 
+addresses = []
+n_addr = 100000
+max_addr = 15
+pageframesize = 5
+
+# Generate Addresses
+for i in range(0, n_addr):
+    addresses.append(random.randint(0,max_addr))
+
+memory = [] # addresses in memory 
+ref = []    # reference record
+hits = 0
+miss = 0
+
+T = 3
+interval = 0
+for addr in addresses:
+    try:
+        idx = memory.index(addr)
+        
+        hits += 1
+        interval += 1
+        ref[idx] = 1
+    except:
+        idx = -1
+        miss = miss + 1
+        if interval > T:  # too rare, clear non-using pages
+            for i in range(len(memory) - 1, -1, -1):
+                if not ref[i]:
+                    del ref[i]
+                    del memory[i]
+        if len(memory) >= pageframesize:# must replace one
+            del ref[0]
+            del memory[0]
+        
+        memory.append(addr)
+        ref.append(0)
+        interval = 0
+        for r in ref:
+            r = 0
+    #print addr, '\t', memory
+print 'Hit Rate: ', float(hits) / n_addr
+```
 ## 扩展思考题
 （1）了解LIRS页置换算法的设计思路，尝试用高级语言实现其基本思路。此算法是江松博士（导师：张晓东博士）设计完成的，非常不错！
 
