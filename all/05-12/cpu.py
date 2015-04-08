@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 # coding: utf-8
-# authorized by Pei Zhongyu
 
 import sys
 from optparse import OptionParser
@@ -319,4 +318,3 @@ print 'Stats: CPU Busy %d (%.2f%%)' % (cpu_busy, 100.0 * float(cpu_busy) / clock
 print 'Stats: IO Busy  %d (%.2f%%)' % (io_busy, 100.0 * float(io_busy) / clock_tick)
 print ''
 
-__author__ = 'Pei Zhongyu'
