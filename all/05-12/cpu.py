@@ -1,10 +1,8 @@
 #! /usr/bin/env python
 # coding: utf-8
-
 import sys
 from optparse import OptionParser
 import random
-
 # process switch behavior
 SCHED_SWITCH_ON_IO = 'SWITCH_ON_IO'
 
@@ -27,7 +25,6 @@ PROC_STATE = 'proc_state_'
 DO_COMPUTE = 'cpu'
 DO_YIELD = 'yld'
 DO_IO = 'io'
-
 
 class scheduler:
 
