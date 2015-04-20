@@ -105,12 +105,10 @@ fork_out:
 - 然后设立父进程，调用`copy_thread()`设立context，tf，获取pid，将其加入进程列表，调用`wakeup_proc()`设置其状态为运行，最后返回pid即可。
 
 ### 练习3：阅读代码，在现有基础上再增加一个内核线程，并通过增加cprintf函数到ucore代码中
-能够把进程的生命周期和调度动态执行过程完整地展现出来
+能够把内核线程的生命周期和调度动态执行过程完整地展现出来
 
 - 见[github-dc3671](https://github.com/dc3671/ucore_lab/tree/master/related_info/lab4/lab4-spoc-discuss/kern/process/proc.c)
 
 ### 练习4 （非必须，有空就做）：增加可以睡眠的内核线程，睡眠的条件和唤醒的条件可自行设计，并给出测试用例，并在spoc练习报告中给出设计实现说明
 
 ### 扩展练习1: 进一步裁剪本练习中的代码，比如去掉页表的管理，只保留段机制，中断，内核线程切换，print功能。看看代码规模会小到什么程度。
-
-
