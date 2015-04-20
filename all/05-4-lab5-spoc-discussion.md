@@ -8,8 +8,11 @@
 ### 总体介绍
 
  - 第一个用户进程创建有什么特殊的？
+ 
  - 系统调用的参数传递过程？
+     + 放在用户栈，参数传递起始位置。
  - getpid的返回值放在什么地方了？
+     + 返回值存在eax。
 
 ### 进程的内存布局
 
@@ -46,6 +49,17 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
 
+- 首先删除 U 盘上的所有分区然后创建一个新的分区，然后将分区格式化为 FAT32 。
+- 将 U 盘挂载到 /media/MULTIBOOT 然后在 U 盘上安装 grub 。然后按照提示创建 grub.cfg 如下
+
+```
+menuentry 'ucore-lab1' {
+    knetbsd /boot/grub_kernel
+}
+```
+
+- 最后把编译好的内核拷贝到 ./boot 目录下就可以重启运行了。
+
 ### (2)(spoc) 理解用户程的生命周期。
 
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中
@@ -66,3 +80,177 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 能够把个人思考题和上述知识点中的内容展示出来：即在ucore运行过程中通过`cprintf`函数来完整地展现出来进程A相关的动态执行和内部数据/状态变化的细节。(约全面细致约好)
 
 请完成如下练习，完成代码填写，并形成spoc练习报告
+
+- 见[github-dc3671](https://github.com/dc3671/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss/)
+- 输出结果如下：
+
+```
+schedule : before proc 0 running.
+schedule : next proc 1 will run.
+proc_run : will run 1
+alloc_proc:a new proc struct alloced.
+setup_kstack for -1 at 0xc03ac000
+copy the memory of 1 to the new process -1
+copy_thread : set proc -1 stack at 0x00000000 tf at 0xc03a6f58
+        now eip at 0xc010a2a0, esp at 0xc03adfb4
+do_fork: fork process 1 to 2
+wakeup_proc : wake up 2.
+alloc_proc:a new proc struct alloced.
+setup_kstack for -1 at 0xc03ae000
+copy the memory of 1 to the new process -1
+copy_thread : set proc -1 stack at 0x00000000 tf at 0xc03a6f58
+        now eip at 0xc010a2a0, esp at 0xc03affb4
+do_fork: fork process 1 to 3
+wakeup_proc : wake up 3.
+schedule : before proc 1 running.
+schedule : next proc 3 will run.
+proc_run : will run 3
+kernel_execve: pid = 3, name = "exit".
+load_icode : load ELF program for proc 3
+load_icode : 1.create memory for process.
+load_icode : 2.create PDT for process.
+setup the page directory table at 0xc03b0000
+load_icode : 3.build BSS for process.
+load_icode : 4.build stack for process.
+load_icode : 5.set memory cr3.
+load_icode : 6.set trapframe, working in user mode.
+set_proc_name : set name of 3 to exit
+do_execve : finish execve, 3 add to scheduler list.
+I am the parent. Forking the child...
+alloc_proc:a new proc struct alloced.
+setup_kstack for -1 at 0xc03bf000
+copy the memory of 3 to the new process -1
+setup the page directory table at 0xc03c1000
+copy_thread : set proc -1 stack at 0xafffff40 tf at 0xc03affb4
+        now eip at 0xc010a2a0, esp at 0xc03c0fb4
+do_fork: fork process 3 to 4
+wakeup_proc : wake up 4.
+I am parent, fork a child pid 4
+I am the parent, waiting now..
+schedule : before proc 3 running.
+schedule : next proc 2 will run.
+proc_run : will run 2
+kernel_execve: pid = 2, name = "exit".
+load_icode : load ELF program for proc 2
+load_icode : 1.create memory for process.
+load_icode : 2.create PDT for process.
+setup the page directory table at 0xc03d0000
+load_icode : 3.build BSS for process.
+load_icode : 4.build stack for process.
+load_icode : 5.set memory cr3.
+load_icode : 6.set trapframe, working in user mode.
+set_proc_name : set name of 2 to exit
+do_execve : finish execve, 2 add to scheduler list.
+I am the parent. Forking the child...
+alloc_proc:a new proc struct alloced.
+setup_kstack for -1 at 0xc03df000
+copy the memory of 2 to the new process -1
+setup the page directory table at 0xc03e1000
+copy_thread : set proc -1 stack at 0xafffff40 tf at 0xc03adfb4
+        now eip at 0xc010a2a0, esp at 0xc03e0fb4
+do_fork: fork process 2 to 5
+wakeup_proc : wake up 5.
+I am parent, fork a child pid 5
+I am the parent, waiting now..
+schedule : before proc 2 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+I am the child.
+do_yield : resched , proc 0 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+I am the child.
+do_yield : resched , proc 0 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674760 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805788 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674716 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805788 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674716 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805788 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674716 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805832 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674716 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805788 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+do_yield : resched , proc -1069674716 give up CPU.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+do_yield : resched , proc -1069805788 give up CPU.
+schedule : before proc 4 running.
+schedule : next proc 5 will run.
+proc_run : will run 5
+free the page directory table at 0xc03e1000
+do_exit : proc 5 change to ZOMBIE. exit code is -66436
+do_exit: test proc 2
+wakeup_proc : wake up 2.
+schedule : before proc 5 running.
+schedule : next proc 4 will run.
+proc_run : will run 4
+free the page directory table at 0xc03c1000
+do_exit : proc 4 change to ZOMBIE. exit code is -66436
+do_exit: test proc 3
+wakeup_proc : wake up 3.
+schedule : before proc 4 running.
+schedule : next proc 3 will run.
+proc_run : will run 3
+remove_links : clean the link of 4free the stack of 4 at 0xc03bf000
+waitpid 4 ok.
+exit pass.
+free the page directory table at 0xc03b0000
+do_exit : proc 3 change to ZOMBIE. exit code is 0
+do_exit: test proc 1
+wakeup_proc : wake up 1.
+schedule : before proc 3 running.
+schedule : next proc 2 will run.
+proc_run : will run 2
+remove_links : clean the link of 5free the stack of 5 at 0xc03df000
+waitpid 5 ok.
+exit pass.
+free the page directory table at 0xc03d0000
+do_exit : proc 2 change to ZOMBIE. exit code is 0
+do_exit: test proc 1
+schedule : before proc 2 running.
+schedule : next proc 1 will run.
+proc_run : will run 1
+remove_links : clean the link of 3free the stack of 3 at 0xc03ae000
+schedule : before proc 1 running.
+schedule : next proc 1 will run.
+remove_links : clean the link of 2free the stack of 2 at 0xc03ac000
+schedule : before proc 1 running.
+schedule : next proc 1 will run.
+all user-mode processes have quit.
+```
